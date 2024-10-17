@@ -1,34 +1,63 @@
-import React from 'react';
-import './content.module.css'; // This will apply your updated CSS
+import React, { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import classes from './content.module.css';
 import Section from '../../components/sectionComponent/Section';
-import { Outlet, useLocation } from 'react-router-dom';
+import AboutUs from '../../components/aboutUsComponent/AboutUs';
+import Welcome from '../../components/welcomeComponent/Welcome';
 import Login from '../loginPage/Login';
+import ProfilePage from '../profilePage/ProfilePage';
 import Registration from '../registrationPage/Registration';
-import Calendar from '../../components/CalendarComponent/Calendar';
+import Calendar from '../../components/CalendarComponent/Calendar'; // ייבוא קומפוננטת לוח שנה
+import checkTokenValidity from '../../components/tokenDecodedComponent/chechTokenValidity';
 
 const Content = () => {
   const location = useLocation();
-  console.log(location);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('authToken'); // קבל את הטוקן ישירות
 
-  // Mapping paths to their content
-  const renderContent = () => {
-    const routesContent = {
-      '/': <Login />,
-      '/registration': <Registration />,
-      '/profile': <Calendar />,
-    };
-    // Return the corresponding content or a default message
-    return (
-      routesContent[location.pathname] || <div>Welcome to the app! Please select a section.</div>
-    );
+  useEffect(() => {
+    const isValidToken = checkTokenValidity(navigate); // בדוק אם הטוקן תקף
+    if (!isValidToken) {
+      // כאן אין צורך ב-setToken, הפונקציה כבר מנהלת את הניווט
+    }
+  }, [navigate]);
+
+  // הפונקציה כדי לקבוע מה להציג בצד שמאל
+  const renderLeftSection = () => {
+    if (token) {
+      return <Calendar />; // הצג את לוח השנה אם יש טוקן
+    }
+    if (location.pathname === '/register') {
+      return <Welcome />; // הצג את ברוכים הבאים אם הכתובת היא /register
+    }
+    return <AboutUs />; // הצג את 'מי אנחנו' אם אין טוקן
+  };
+
+  // הפונקציה כדי לקבוע מה להציג בצד ימין
+  const renderRightSection = () => {
+    if (token && location.pathname === '/') {
+      return <ProfilePage />; // הצג את הפרופיל בדף הראשי אם יש טוקן
+    }
+
+    if (token) {
+      return <Outlet />; // הצג את התוכן של ה-Outlets אם יש טוקן
+    }
+
+    // בדוק אם הכתובת היא עבור טבלת הרישום
+    if (location.pathname === '/register') {
+      return <Registration />; // הצג את טבלת ההרשמה אם הכתובת היא /register
+    }
+
+    return <Login />; // אחרת, הצג את קומפוננטת הכניסה
   };
 
   return (
-    <article>
-      <Section>
-        <Outlet />
-      </Section>
-      <Section>{renderContent()}</Section>
+    <article className={classes.contentLayout}>
+      {/* תוכן שמאל - משתמש בקומפוננטה הנכונה על פי הכתובת */}
+      <Section className={classes.leftSection}>{renderLeftSection()}</Section>
+
+      {/* Outlet פנימי - בצד ימין */}
+      <Section className={classes.rightSection}>{renderRightSection()}</Section>
     </article>
   );
 };

@@ -1,8 +1,8 @@
+// models/User.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
-const UserSchema = new mongoose.Schema({
-  username: {
+const userSchema = new mongoose.Schema({
+  email: {
     type: String,
     required: true,
     unique: true,
@@ -11,24 +11,31 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {
+  resetToken: {
+    type: String,
+    default: null,
+  },
+  resetTokenExpiration: {
+    type: Date,
+    default: null,
+  },
+  firstName: {
+    // שם פרטי
     type: String,
     required: true,
-    unique: true,
   },
-  image: {
-    type: String, // Store image as a String
+  lastName: {
+    // שם משפחה
+    type: String,
+    required: true,
+  },
+  profilePicture: {
+    // תמונת פרופיל
+    type: String,
+    default: null, // שדה אופציונלי
   },
 });
 
-//Hash password before saving
-UserSchema.prev('save', async function (next) {
-  if (!this.isModified('password')) {
-    next();
-  }
-  const salt = await bcrypt.getSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
+const User = mongoose.model('User', userSchema);
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = User;

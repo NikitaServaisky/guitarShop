@@ -1,3 +1,5 @@
+//task.jsx
+import React from 'react';
 import Checkbox from '../checkBoxComponent/CheckBox';
 
 const Task = ({ task, onTaskChange }) => {

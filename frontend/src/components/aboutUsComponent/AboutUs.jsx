@@ -7,7 +7,7 @@ const AboutUs = () => {
   const navigate = useNavigate();
 
   const toNavigate = () => {
-    navigate('/registration');
+    navigate('/register');
   };
 
   return (

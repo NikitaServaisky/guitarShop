@@ -1,20 +1,22 @@
+// TaskList.jsx
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-const TaskList = ({ tasks, selectedDate }) => {
-  const dateKey = selectedDate?.toISOString().split('T')[0];
-
-  if (!selectedDate || !tasks[dateKey]) {
-    return <p>No tasks for the selected date.</p>;
-  }
+const TaskList = () => {
+  const tasks = useSelector((state) => state.tasks); // קבלת המשימות מהסטייט של רידוקס
 
   return (
-    <ul>
-      {tasks[dateKey].map((item, index) => (
-        <li key={index}>
-          {item.time} - {item.task}
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h2>Your Tasks</h2>
+      <ul>
+        {tasks.map((task) => (
+          <li key={task._id}>
+            {task.title} - {task.date} - {task.time}
+            {/* הוסף כאן כל מידע נוסף שתרצה להציג */}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

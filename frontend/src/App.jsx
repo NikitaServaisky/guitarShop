@@ -1,41 +1,36 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Root from './pages/rootComponent/Root';
+import ProtectedRoute from './routes/protectedRoute';
 import Error from './pages/errorPage/Error';
 import Content from './pages/contentPage/Content';
-import AboutUs from './components/aboutUsComponent/AboutUs';
-import Welcome from './components/welcomeComponent/welcome';
+import Login from './pages/loginPage/Login';
 import ProfilePage from './pages/profilePage/ProfilePage';
+import Registration from './pages/registrationPage/Registration';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
-    errorElement: <Error />,
     children: [
       {
         path: '/',
         element: <Content />,
         children: [
+          { path: 'login', element: <Login /> },
+          { path: 'register', element: <Registration /> },
           {
-            path: '/',
-            element: <AboutUs />,
-          },
-          {
-            path: '/registration',
-            element: <Welcome />,
-          },
-          {
-            path: '/profile',
-            element: <ProfilePage />,
+            path: 'profile',
+            element: (
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
     ],
   },
-  {
-    path: '*',
-    element: <Error />,
-  },
+  { path: '*', element: <Error /> },
 ]);
 
 function App() {
