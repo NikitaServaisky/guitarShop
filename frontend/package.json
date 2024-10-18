@@ -11,7 +11,7 @@
     "clean": "rmdir /s /q node_modules && del package-lock.json && npm install"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.2.7",
+    "@reduxjs/toolkit": "^2.3.0",
     "axios": "^1.7.7",
     "date-fns": "^4.1.0",
     "jwt-decode": "^4.0.0",

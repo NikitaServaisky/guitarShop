@@ -13,12 +13,13 @@ import {
 import TaskToDo from '../TaskModal/TaskToDo';
 import { useDispatch } from 'react-redux';
 import { addTask } from '../redux/tasksSlice';
-import './Calendar.module.css'; // Assuming you have the CSS
+import './Calendar.module.css';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
-  const dispatch = useDispatch(); // Initialize the dispatch hook
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const handlePrevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
@@ -30,23 +31,22 @@ const Calendar = () => {
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
+    setIsModalOpen(true); // פתיחת המודל
   };
 
   const handleTaskSave = (taskData) => {
-    // Dispatch the task to Redux
-    dispatch(addTask(taskData));
-    setSelectedDate(null);
+    dispatch(addTask(taskData)); // שמירת המשימה
+    setIsModalOpen(false); // סגירת המודל
+    setSelectedDate(null); // לנקות את התאריך הנבחר
   };
 
-  const renderHeader = () => {
-    return (
-      <div className="header">
-        <button onClick={handlePrevMonth}>Previous Month</button>
-        <span>{format(currentMonth, 'MMMM yyyy')}</span>
-        <button onClick={handleNextMonth}>Next Month</button>
-      </div>
-    );
-  };
+  const renderHeader = () => (
+    <div className="header">
+      <button onClick={handlePrevMonth}>Previous Month</button>
+      <span>{format(currentMonth, 'MMMM yyyy')}</span>
+      <button onClick={handleNextMonth}>Next Month</button>
+    </div>
+  );
 
   const renderDays = () => {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -77,7 +77,6 @@ const Calendar = () => {
         const cloneDay = day;
 
         if (!isSameMonth(day, monthStart)) {
-          // Render empty cells (for padding) for days outside the current month
           days.push(<td key={day} className="empty-cell"></td>);
         } else {
           days.push(
@@ -90,10 +89,8 @@ const Calendar = () => {
             </td>,
           );
         }
-
         day = addDays(day, 1);
       }
-
       rows.push(<tr key={day}>{days}</tr>);
       days = [];
     }
@@ -108,10 +105,10 @@ const Calendar = () => {
         {renderDays()}
         {renderCells()}
       </table>
-      {selectedDate && (
+      {isModalOpen && (
         <TaskToDo
           date={format(selectedDate, 'yyyy-MM-dd')}
-          onClose={() => setSelectedDate(null)}
+          onClose={() => setIsModalOpen(false)}
           onSave={handleTaskSave}
         />
       )}

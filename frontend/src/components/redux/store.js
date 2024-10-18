@@ -5,6 +5,13 @@ const store = configureStore({
   reducer: {
     tasks: tasksReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['tasks/addTask'],
+        ignoredPaths: ['tasks.images'],
+      },
+    }),
 });
 
 export default store;

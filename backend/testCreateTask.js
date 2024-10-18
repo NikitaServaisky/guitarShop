@@ -4,7 +4,8 @@ const axios = require('axios');
 const backendApi = 'http://localhost:3000';
 
 // פונקציה לשליחת בקשה ליצירת משימה
-const createTask = async (title, description, date, time) => {
+// פונקציה לשליחת בקשה ליצירת משימה
+const createTask = async (title, description, date, time, userId) => {
   try {
     const response = await axios.post(
       `${backendApi}/tasks/create`,
@@ -13,11 +14,12 @@ const createTask = async (title, description, date, time) => {
         description,
         date,
         time,
+        userId, // ודא שהשדה הזה מכיל ID חוקי
       },
       {
         headers: {
           Authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MGZjMDhlMjgxNzlmNjA4NGY4NDU3OCIsImlhdCI6MTcyOTE5MTkzOCwiZXhwIjoxNzI5MTk1NTM4fQ.ShdFsOzH_qKuxDeJvqiQwOOSYg-oQPtKPpb9ryCy5fI', // הכנס כאן את ה-token שלך
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MGZjMDhlMjgxNzlmNjA4NGY4NDU3OCIsImlhdCI6MTcyOTI1MDQ2OCwiZXhwIjoxNzI5MjU0MDY4fQ.ceccAM1GHDx8na15fIafCsbb5YWyEYmkSOpY0Mybtow', // הכנס כאן את ה-token שלך
         },
       },
     );
@@ -28,4 +30,5 @@ const createTask = async (title, description, date, time) => {
 };
 
 // קריאה לפונקציה לדוגמה עם נתונים של משימה חדשה
-createTask('New Task Title', 'Description of the new task', new Date(), '12:00');
+const userId = '605c72efb8c8f23b4c4c7f4e'; // הכנס כאן את ה-ID של המשתמש הקיים שלך
+createTask('Nikita', 'Description of the new task Nikita', new Date(), '12:00', userId);
