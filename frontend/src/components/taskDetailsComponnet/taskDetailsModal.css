@@ -1,0 +1,60 @@
+/* taskDetailsModal.css */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* רקע חצי שקוף */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* להבטיח שהמודל מעל כל דבר אחר */
+}
+
+.modal-content {
+  background-color: white; /* צבע רקע לבן */
+  border-radius: 8px; /* פינות מעוגלות */
+  padding: 20px;
+  max-width: 500px; /* הגבלת רוחב המודל */
+  width: 100%; /* גובה המודל למילוי רוחב הורה */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* צל */
+  position: relative; /* לאפשר להשתמש בabsolute לclose button */
+}
+
+h2 {
+  margin-top: 0; /* להסיר רווח מעל הכותרת */
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+.task-images {
+  display: flex;
+  flex-wrap: wrap; /* מאפשר תמונות להיות בשורות שונות */
+  margin-top: 10px; /* רווח בין הכותרת לתמונות */
+}
+
+.task-images img {
+  max-width: 100px; /* הגבלת רוחב התמונה */
+  max-height: 100px; /* הגבלת גובה התמונה */
+  margin-right: 10px; /* רווח בין התמונות */
+  border-radius: 4px; /* פינות מעוגלות לתמונות */
+}
+
+button {
+  margin-top: 15px; /* רווח מעל הכפתורים */
+  margin-right: 10px; /* רווח בין כפתורים */
+  padding: 10px 15px; /* רווח פנימי בכפתור */
+  border: none; /* ללא גבול */
+  border-radius: 4px; /* פינות מעוגלות לכפתורים */
+  cursor: pointer; /* מצביע כדי להראות שניתן ללחוץ */
+  transition: background-color 0.3s; /* מעבר חלק לשינוי צבע */
+}
+
+button:hover {
+  background-color: #e0e0e0; /* צבע רקע בהבהרה */
+}

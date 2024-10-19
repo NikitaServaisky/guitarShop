@@ -7,8 +7,8 @@ import Welcome from '../../components/welcomeComponent/Welcome';
 import Login from '../loginPage/Login';
 import ProfilePage from '../profilePage/ProfilePage';
 import Registration from '../registrationPage/Registration';
-import Calendar from '../../components/CalendarComponent/Calendar'; // ייבוא קומפוננטת לוח שנה
 import checkTokenValidity from '../../components/tokenDecodedComponent/chechTokenValidity';
+import Calendar from '../../components/CalendarComponent/Calendar';
 
 const Content = () => {
   const location = useLocation();

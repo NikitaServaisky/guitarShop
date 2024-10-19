@@ -1,120 +1,115 @@
 import React, { useState } from 'react';
-import {
-  format,
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  addDays,
-  isSameMonth,
-  isSameDay,
-  subMonths,
-  addMonths,
-} from 'date-fns';
-import TaskToDo from '../TaskModal/TaskToDo';
+import './Calendar.css';
+import TaskModal from '../taskModalComponent/TasksModal';
+import axiosInstance from '../../api/axiosInstance';
 import { useDispatch } from 'react-redux';
 import { addTask } from '../redux/tasksSlice';
-import './Calendar.module.css'; // Assuming you have the CSS
 
-const Calendar = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(null);
-  const dispatch = useDispatch(); // Initialize the dispatch hook
-
-  const handlePrevMonth = () => {
-    setCurrentMonth(subMonths(currentMonth, 1));
-  };
-
-  const handleNextMonth = () => {
-    setCurrentMonth(addMonths(currentMonth, 1));
-  };
+const Calendar = ({ onDataChange }) => {
+  const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const daysInWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const handleDateClick = (date) => {
-    setSelectedDate(date);
+    onDataChange(date); // אפשר לוודא שהפונקציה הזו מבצעת קריאה לשרת כדי לעדכן את הסטייט
   };
 
-  const handleTaskSave = (taskData) => {
-    // Dispatch the task to Redux
-    dispatch(addTask(taskData));
-    setSelectedDate(null);
+  const handleDayClick = (day) => {
+    const formattedDate = `${currentDate.getFullYear()}-${String(
+      currentDate.getMonth() + 1,
+    ).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    setSelectedDate(formattedDate);
+    setShowModal(true);
   };
 
-  const renderHeader = () => {
-    return (
-      <div className="header">
-        <button onClick={handlePrevMonth}>Previous Month</button>
-        <span>{format(currentMonth, 'MMMM yyyy')}</span>
-        <button onClick={handleNextMonth}>Next Month</button>
-      </div>
-    );
+  const handleSaveTask = async (task) => {
+    console.log('handleSaveTask called with:', task);
+
+    const formData = new FormData();
+    formData.append('title', task.taskName);
+    formData.append('description', task.description);
+    formData.append('time', task.time);
+    formData.append('date', task.date);
+
+    // נוודא שה-images מוגדר תמיד (ואפילו אם הוא ריק)
+    if (task.images && task.images.length > 0) {
+      task.images.forEach((image) => {
+        formData.append('images', image);
+      });
+    } else {
+      console.warn('No images to upload.');
+    }
+
+    try {
+      const response = await axiosInstance.post('/tasks/create', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Task saved:', response.data);
+      dispatch(addTask(response.data)); // dispatch addTask to Redux
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error saving task:', error);
+    }
   };
 
   const renderDays = () => {
-    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return (
-      <thead>
-        <tr>
-          {daysOfWeek.map((day, index) => (
-            <th key={index}>{day}</th>
-          ))}
-        </tr>
-      </thead>
-    );
+    const days = [];
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const totalDays = lastDayOfMonth.getDate();
+
+    for (let i = 1; i <= totalDays; i++) {
+      days.push(
+        <div key={i} className="day" onClick={() => handleDayClick(i)}>
+          {i}
+        </div>,
+      );
+    }
+    return days;
   };
 
-  const renderCells = () => {
-    const monthStart = startOfMonth(currentMonth);
-    const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart);
-    const endDate = startOfWeek(addDays(monthEnd, 6));
+  const handlePrevMonth = () => {
+    setCurrentDate((prevDate) => {
+      const newDate = new Date(prevDate);
+      newDate.setMonth(newDate.getMonth() - 1);
+      return newDate;
+    });
+  };
 
-    const rows = [];
-    let days = [];
-    let day = startDate;
-
-    while (day <= endDate) {
-      for (let i = 0; i < 7; i++) {
-        const formattedDate = format(day, 'd');
-        const cloneDay = day;
-
-        if (!isSameMonth(day, monthStart)) {
-          // Render empty cells (for padding) for days outside the current month
-          days.push(<td key={day} className="empty-cell"></td>);
-        } else {
-          days.push(
-            <td
-              key={day}
-              className={`cell ${isSameDay(day, selectedDate) ? 'selected' : ''}`}
-              onClick={() => handleDateClick(cloneDay)}
-            >
-              {formattedDate}
-            </td>,
-          );
-        }
-
-        day = addDays(day, 1);
-      }
-
-      rows.push(<tr key={day}>{days}</tr>);
-      days = [];
-    }
-
-    return <tbody>{rows}</tbody>;
+  const handleNextMonth = () => {
+    setCurrentDate((prevDate) => {
+      const newDate = new Date(prevDate);
+      newDate.setMonth(newDate.getMonth() + 1);
+      return newDate;
+    });
   };
 
   return (
     <div className="calendar">
-      {renderHeader()}
-      <table>
-        {renderDays()}
-        {renderCells()}
-      </table>
-      {selectedDate && (
-        <TaskToDo
-          date={format(selectedDate, 'yyyy-MM-dd')}
-          onClose={() => setSelectedDate(null)}
-          onSave={handleTaskSave}
-        />
-      )}
+      <header>
+        <button onClick={handlePrevMonth}>קודם</button>
+        <h2>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
+        <button onClick={handleNextMonth}>הבא</button>
+      </header>
+      <div className="days-of-week">
+        {daysInWeek.map((day, index) => (
+          <div key={index} className="daysofweek">
+            {day}
+          </div>
+        ))}
+      </div>
+      <div className="days">{renderDays()}</div>
+
+      <TaskModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onSave={handleSaveTask}
+        selectedDate={selectedDate} // העברת התאריך שנבחר למודל
+      />
     </div>
   );
 };

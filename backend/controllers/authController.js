@@ -58,8 +58,15 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
 
+    // צור טוקן עם ה-userId
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ message: 'Login successful', token });
+
+    // החזרת הטוקן יחד עם ה-userId
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      userId: user._id, // החזרת userId כדי לשמור ב-localStorage
+    });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ message: 'Login failed' });

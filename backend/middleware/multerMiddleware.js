@@ -1,6 +1,7 @@
 const multer = require('multer');
+const path = require('path');
 
-// הגדרה היכן וכיצד לאחסן את הקבצים
+// הגדרת היכן וכיצד לאחסן את הקבצים
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/'); // תיקייה בה יישמרו התמונות
@@ -13,5 +14,4 @@ const storage = multer.diskStorage({
 
 // יצירת אינסטנס של multer
 const upload = multer({ storage: storage });
-
 module.exports = upload;

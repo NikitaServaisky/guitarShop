@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../api/axiosInstance'; // ייבא את axiosInstance
+import axiosInstance from '../../api/axiosInstance';
 import Button from '../buttonComponent/Button';
 import { useNavigate } from 'react-router-dom';
+import TaskList from '../taskListComponent/TaskLists';
 
 const Profile = () => {
   const [userData, setUserData] = useState({});
-  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // נבצע ניווט אחרי ההתנתקות
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get('/profile'); // השתמש ב-axiosInstance
-        console.log(response);
+        const response = await axiosInstance.get('/profile');
         setUserData(response.data.user || {});
-        setTasks(response.data.tasks || []);
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {
@@ -26,10 +24,9 @@ const Profile = () => {
     fetchData();
   }, []);
 
-  // פונקציית ההתנתקות
   const logout = () => {
-    localStorage.removeItem('authToken'); // מחיקת הטוקן
-    navigate('/'); // ניתוב לדף הבית או דף התחברות
+    localStorage.removeItem('authToken');
+    navigate('/');
   };
 
   if (loading) {
@@ -39,12 +36,7 @@ const Profile = () => {
   return (
     <div>
       <h1>{`${userData.firstName} ${userData.lastName}`}</h1>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task._id}>{task.title}</li>
-        ))}
-      </ul>
-      {/* ניתוק משתמש בלחיצה על הכפתור */}
+      <TaskList />
       <Button onClick={logout}>Logout</Button>
     </div>
   );

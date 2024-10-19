@@ -9,7 +9,7 @@ const getUserTasks = async () => {
     const response = await axios.get(`${backendApi}/tasks/get-all`, {
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MGZjMDhlMjgxNzlmNjA4NGY4NDU3OCIsImlhdCI6MTcyOTE3NTY2MSwiZXhwIjoxNzI5MTc5MjYxfQ.n-Nf-_iNWT5sXU2JGjLOmAi5W2lvjQnCaZf1Lyrt2yA', // אם אתה משתמש באימות, הכנס כאן את ה-token שלך
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MGZjMDhlMjgxNzlmNjA4NGY4NDU3OCIsImlhdCI6MTcyOTI3MTI1NywiZXhwIjoxNzI5Mjc0ODU3fQ.aEOqpHaMJYd2F1Ay8rSm9qB-bkmDuanNBZYY3d-T_EY', // אם אתה משתמש באימות, הכנס כאן את ה-token שלך
       },
     });
     console.log('User Tasks:', response.data);

@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  description: { type: String },
+  description: { type: String, required: true },
   date: { type: Date, required: true },
-  time: { type: String },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  imageUrl: { type: String }, // הוסף שדה לתמונה
+  time: { type: String, required: true },
+  imageUrl: { type: [String], required: false }, // שדה לא חובה לשמירת כתובת התמונה
+  completed: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model('Task', taskSchema);
+const Task = mongoose.model('Task', taskSchema);
+module.exports = Task;

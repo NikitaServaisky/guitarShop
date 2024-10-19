@@ -18,6 +18,7 @@ const Login = () => {
       const response = await axiosInstance.post('/login', formData);
       console.log('Login successful:', response.data);
       localStorage.setItem('authToken', response.data.token); // שמירת הטוקן ב-localStorage
+      localStorage.setItem('userId', response.data.userId); // save user id in localStorage
       navigate('/profile'); // ניווט לעמוד הפרופיל
     } catch (error) {
       console.error(
@@ -31,7 +32,7 @@ const Login = () => {
     <div>
       <h2>Login Form</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <Form fields={fields} onSubmit={handleSubmit}>
+      <Form fields={fields} onSubmit={handleSubmit} showImageInput={false}>
         Login
       </Form>
     </div>

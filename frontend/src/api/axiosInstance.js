@@ -11,11 +11,14 @@ const axiosInstance = axios.create({
 // הוסף אינטרספטור שידאג להוסיף את ה-Authorization header לפני כל בקשה
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('authToken');
+  const userId = localStorage.getItem('userId'); // קבלת ה-ID של המשתמש
   console.log('Sending token:', token); // הוסף כאן לוג
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  if (userId) {
+    config.headers['X-User-Id'] = userId; // הוסף את ה-ID ל-Headers
+  }
   return config;
 });
-
 export default axiosInstance;
