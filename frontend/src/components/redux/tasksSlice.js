@@ -4,11 +4,6 @@ const initialState = {
   tasks: [],
 };
 
-const onCompleteTask = (taskId) => {
-  console.log('Completing task:', taskId); // בדוק שאתה מקבל את ה-taskId הנכון
-  dispatch(completeTask(taskId));
-};
-
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
@@ -33,7 +28,7 @@ const tasksSlice = createSlice({
       }
     },
     deleteTask: (state, action) => {
-      state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+      state.tasks = state.tasks.filter((task) => task._id !== action.payload); // משתמשים ב-_id
     },
   },
 });

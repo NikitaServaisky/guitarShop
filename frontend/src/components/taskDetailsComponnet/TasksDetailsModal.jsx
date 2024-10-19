@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../buttonComponent/Button';
 import './taskDetailsModal.css';
 
-const TaskDetailsModal = ({ task, onClose, onCompleteTask }) => {
+const TaskDetailsModal = ({ task, onClose, onCompleteTask, onDeleteTask }) => {
   if (!task) return null;
 
   return (
@@ -18,7 +18,7 @@ const TaskDetailsModal = ({ task, onClose, onCompleteTask }) => {
               ))}
             </div>
           )}
-        <Button>Delete task</Button>
+        <Button onClick={() => onDeleteTask(task._id)}>Delete Task</Button>
         <Button onClick={() => onCompleteTask(task._id)}>Mark as Completed</Button>
         <Button onClick={onClose}>Close</Button>
       </div>

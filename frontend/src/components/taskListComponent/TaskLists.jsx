@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTasks, completeTask } from '../redux/tasksSlice';
+import { setTasks, completeTask, deleteTask } from '../redux/tasksSlice';
 import Checkbox from '../checkBoxComponent/CheckBox';
 import TaskDetailsModal from '../taskDetailsComponnet/TasksDetailsModal';
 import axios from '../../api/axiosInstance';
@@ -46,6 +46,18 @@ const TaskList = () => {
     }
   };
 
+  const handleDeleteTask = async (taskId) => {
+    console.log('Deleting task with ID:', taskId);
+    try {
+      await axios.delete(`tasks/delete/${taskId}`); // נניח שהשרת תומך ב-endpoint הזה
+      dispatch(deleteTask(taskId)); // עכשיו removeTask יהיה זמין לשימוש
+      console.log('Task deleted successfully');
+      setIsModalOpen(false); // סגור את המודאל לאחר מחיקת המשימה
+    } catch (err) {
+      console.error('Error deleting task:', err);
+    }
+  };
+
   return (
     <div className="task-list">
       <h2>Task List</h2>
@@ -80,6 +92,7 @@ const TaskList = () => {
           task={selectedTask}
           onClose={() => setIsModalOpen(false)}
           onCompleteTask={handleCompleteTask}
+          onDeleteTask={handleDeleteTask}
         />
       )}
     </div>
