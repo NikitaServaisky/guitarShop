@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // פונקציה לשליחת דוא"ל
-const sendEmail = (to, subject, text) => {
+const sendRegistrationEmail = (to, subject, text) => {
   const mailOptions = {
     from: process.env.EMAIL_USER, // כתובת המשלח
     to, // כתובת הנמען
@@ -21,4 +21,4 @@ const sendEmail = (to, subject, text) => {
   return transporter.sendMail(mailOptions);
 };
 
-module.exports = { sendEmail };
+module.exports = { sendRegistrationEmail };

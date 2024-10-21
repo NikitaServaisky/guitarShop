@@ -1,5 +1,5 @@
 const User = require('../models/User'); // אם יש לך מודל משתמש
-const { sendEmail } = require('../services/emailServise'); // עדכן את הנתיב אם צריך
+const { sendRegistrationEmail } = require('../services/emailServise'); // עדכן את הנתיב אם צריך
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -8,7 +8,6 @@ const crypto = require('crypto');
 const registerUser = async (req, res) => {
   const { email, password, firstName, lastName, profilePicture } = req.body;
 
-  // בדוק אם השדות לא ריקים
   if (!email || !password || !firstName || !lastName) {
     return res
       .status(400)
@@ -25,17 +24,22 @@ const registerUser = async (req, res) => {
     const newUser = await User.create({
       email,
       password: hashedPassword,
-      firstName, // הוסף את שם הפרטי
-      lastName, // הוסף את שם המשפחה
-      profilePicture, // הוסף את תמונת הפרופיל (אופציונלי, אם יש)
+      firstName,
+      lastName,
+      profilePicture,
     });
 
-    // שלח דוא"ל אישור רישום
-    const subject = 'Welcome to Our Service';
-    const text = `Hi ${newUser.firstName} ${newUser.lastName},\n\nThank you for registering with us! We are excited to have you on board.`;
-    await sendEmail(newUser.email, subject, text);
+    // יצירת טוקן
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(201).json({ message: 'User registered successfully' });
+    await sendRegistrationEmail(newUser.email, newUser.firstName);
+
+    // החזרת תשובה עם הטוקן והיוזר איידי
+    res.status(201).json({
+      message: 'User registered successfully',
+      userId: newUser._id,
+      token,
+    });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ message: 'Error registering user' });
