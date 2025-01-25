@@ -18,20 +18,19 @@ const Login = () => {
       const response = await axiosInstance.post('/login', formData);
       console.log('Login successful:', response.data);
 
-      // הוסף כאן לוג עבור התגובה
       console.log('Response from server:', response.data);
 
-      localStorage.setItem('authToken', response.data.token); // שמירת הטוקן ב-localStorage
+      localStorage.setItem('authToken', response.data.token); 
 
-      // ודא שה-ID של המשתמש נמצא בתגובה
+      
       if (response.data.user && response.data.user._id) {
-        localStorage.setItem('userId', response.data.user._id); // שמירת ה-ID ב-localStorage
+        localStorage.setItem('userId', response.data.user._id); 
         console.log('User ID saved:', response.data.user._id);
       } else {
         console.error('User ID not found in response');
       }
 
-      navigate('/profile'); // ניווט לעמוד הפרופיל
+      navigate('/profile'); 
     } catch (error) {
       console.error(
         'Error logging in:',

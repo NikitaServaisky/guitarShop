@@ -52,7 +52,7 @@ const TaskToDo = ({ date, onClose, onSave }) => {
         onChange={(e) => setDescription(e.target.value)}
         placeholder="תיאור"
       />
-      <input type="date" value={new Date(date).toISOString().split('T')[0]} readOnly />
+      <input type="date" value={date ? new Date(date).toISOString().split('T')[0] : ''} />
       <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
       <input type="file" multiple onChange={handleImageChange} />
       <button onClick={handleSubmit}>Save</button>

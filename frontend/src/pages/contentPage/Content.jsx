@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import classes from './content.module.css';
 import Section from '../../components/sectionComponent/Section';
 import AboutUs from '../../components/aboutUsComponent/AboutUs';
-import Welcome from '../../components/welcomeComponent/Welcome';
+import Welcome from '../../components/welcomeComponent/welcome';
 import Login from '../loginPage/Login';
 import ProfilePage from '../profilePage/ProfilePage';
 import Registration from '../registrationPage/Registration';

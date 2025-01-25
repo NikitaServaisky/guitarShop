@@ -13,7 +13,7 @@ import {
 import TaskToDo from '../TaskModal/TaskToDo';
 import { useDispatch } from 'react-redux';
 import { addTask } from '../redux/tasksSlice';
-import './Calendar.module.css';
+import './calendar.module.css';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());

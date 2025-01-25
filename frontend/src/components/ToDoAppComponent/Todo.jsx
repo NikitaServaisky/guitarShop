@@ -21,8 +21,8 @@ const TodoApp = () => {
         description: formData.description,
         date: formData.date || new Date().toISOString().split('T')[0], // אם התאריך לא תקין, השתמש בתאריך הנוכחי
         time: formData.time || '12:00', // אם הזמן לא תקין, השתמש בזמן ברירת מחדל
-        images: formData.images || [],
         userId: userId,
+        images: formData.images || [],
       };
 
       console.log('Submitting task data:', taskData);
@@ -32,6 +32,7 @@ const TodoApp = () => {
     } catch (error) {
       console.error('Error sending task:', error.response.data);
     }
+    console.log('formData.date:', formData.date);
   };
 
   const fetchTasks = async () => {
@@ -47,6 +48,8 @@ const TodoApp = () => {
   useEffect(() => {
     fetchTasks(); // Fetch tasks on load
   }, [dispatch]);
+
+  // console.log('date to send:', formData.date);
 
   return (
     <div>
